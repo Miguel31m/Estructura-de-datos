@@ -1,3 +1,5 @@
+#ifndef __LISTAS_HH__
+#define __LISTAS_HH__
 #include <iostream>
 using namespace std;
 
@@ -277,10 +279,70 @@ public:
 
   void push_front_rec(Node* nodo) {
     if (nodo == nullptr) return;
-    // primero bajo hasta el último
+    
     push_front_rec(nodo->getNext());
-    // cuando vuelvo, inserto
+    
     push_front(nodo->data);
   }
 
+  void split(List<T>& a, List<T>& b){
+    Node* t= first;
+    for(unsigned int i=0;i<size();i++){
+      if(i%2==0){
+        a.push_back(t->data);
+
+      }else{
+        b.push_back(t->data);
+      }
+      t=t->getNext();
+    }
+    first=nullptr;
+    last=nullptr;
+    sz=0;
+    
+  }
+  void merge(List<T>& a, List<T>& b) {
+    
+    clear();  
+
+    Node* pa = a.first;
+    Node* pb = b.first;
+
+    
+    while (pa != nullptr && pb != nullptr) {
+        if (pa->data <= pb->data) {
+            push_back(pa->data);
+            pa = pa->getNext();
+        } else {
+            push_back(pb->data);
+            pb = pb->getNext();
+        }
+    }
+
+  
+    while (pa != nullptr) {
+        push_back(pa->data);
+        pa = pa->getNext();
+    }
+
+   
+    while (pb != nullptr) {
+        push_back(pb->data);
+        pb = pb->getNext();
+    }
+}
+void mergeSort(){
+  if(size()==0 || size()==1){
+    return;
+  }
+  List <T> a,b;
+  split(a,b);
+  a.mergeSort();
+  b.mergeSort();
+  merge(a,b);
+}
+
+  
+
 };
+#endif // __LISTAS_HH__
