@@ -7,55 +7,50 @@
 #include <utility>
 #include <ctime>
 
-
 using namespace std;
 
 class HashtableInt {
 private:
     unsigned int m;
     vector<list<pair<int, string>>> storage;
+    unsigned int sz;   
 
     unsigned int hash(int key) const {
-        int random_salt = time(NULL);      // NO determinística
-        return (key * random_salt) % m;    // cambia cada segundo
+        int random_salt = time(NULL);      
+        return (key * random_salt) % m;    
     }
 
 public:
-    HashtableInt(unsigned int m_size)
-        : m(m_size), storage(m_size) {}
+    HashtableInt(unsigned int m_size): m(m_size), storage(m_size), sz(0) {}   
 
-    // ==============================
-    //           INSERT
-    // ==============================
     void insert(int key, const string &value) {
-        unsigned int index = hash(key);
+        unsigned int index = hash(key) % m;
 
-        // Revisar si ya existe la llave
-        for (auto &elem : storage[index]) {
-            if (elem.first == key) {
-                elem.second = value;       // actualizar si ya existe
+        for (auto it = storage[index].begin(); it != storage[index].end(); ++it) {
+            if (it->first == key) {
+                it->second = value; 
                 return;
             }
         }
-
-        // Si no existe, la agregamos a la lista
         storage[index].push_back(make_pair(key, value));
+        sz++;   
     }
 
-    // ==============================
-    //             GET
-    // ==============================
     string get(int key) {
-        unsigned int index = hash(key);
+        unsigned int index = hash(key) % m;
 
-        // Recorrer la lista del bucket correspondiente
-        for (auto &elem : storage[index]) {
-            if (elem.first == key) {
-                return elem.second;
+        
+        for (auto it = storage[index].begin(); it != storage[index].end(); ++it) {
+            if (it->first == key) {
+                return it->second;
             }
         }
 
-        return "NOT FOUND";
+        return "";
+    }
+    
+    unsigned int size() const {
+        return sz;
     }
 };
 
