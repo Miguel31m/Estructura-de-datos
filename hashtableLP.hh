@@ -12,19 +12,16 @@ class HashtableLP {
 private:
     unsigned int m;
     vector<pair<K, V>> storage;
-    vector<bool> used; // para saber si una celda está ocupada
+    vector<bool> used; 
 
     unsigned int hash(const K &key) const {
         return std::hash<K>{}(key) % m;
     }
 
 public:
-    HashtableLP(unsigned int size)
-        : m(size), storage(size), used(size, false) {}
+    HashtableLP(unsigned int size): m(size), storage(size), used(size, false) {}
 
-    // ==============================
-    //            INSERT
-    // ==============================
+   
     void insert(const K &key, const V &value) {
         unsigned int index = hash(key);
 
@@ -41,9 +38,7 @@ public:
         throw runtime_error("Tabla hash llena");
     }
 
-    // ==============================
-    //            FIND
-    // ==============================
+   
     V find(const K &key) const {
         unsigned int index = hash(key);
 
@@ -60,9 +55,6 @@ public:
         return "NOT FOUND";
     }
 
-    // ==============================
-    //           REMOVE
-    // ==============================
     void remove(const K &key) {
         unsigned int index = hash(key);
 
